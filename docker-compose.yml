@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+
+  # ── Base de données MySQL ────────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: smartstress_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
+      MYSQL_DATABASE:      ${DB_NAME:-smartstress}
+      MYSQL_USER:          ${DB_USER:-smartstress_user}
+      MYSQL_PASSWORD:      ${DB_PASS:-smartstress_pass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-rootpass}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # ── Backend FastAPI ──────────────────────────────────────────────────────
+  backend:
+    build: .
+    container_name: smartstress_backend
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST:    mysql
+      DB_PORT:    "3306"
+      DB_NAME:    ${DB_NAME:-smartstress}
+      DB_USER:    ${DB_USER:-smartstress_user}
+      DB_PASS:    ${DB_PASS:-smartstress_pass}
+      SECRET_KEY: ${SECRET_KEY:-change-in-production}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Dashboard React (Nginx) ──────────────────────────────────────────────
+  dashboard:
+    build:
+      context: ./dashboard_pro
+      dockerfile: Dockerfile.nginx
+    container_name: smartstress_dashboard
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+    driver: local
