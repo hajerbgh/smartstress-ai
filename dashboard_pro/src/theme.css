@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cw-teal: #5BB5B5;
+  --color-cw-coral: #F28C7E;
+  --color-cw-butter: #FDF6EC;
+  --color-cw-peach: #F5C6A5;
+  --color-cw-mint: #A8DCD1;
+  --color-cw-neutral-900: #2D2D2D;
+  --color-cw-neutral-500: #6B7280;
+  --color-cw-neutral-100: #F3F4F6;
+  --color-cw-neutral-50: #FFFFFF;
+
+  --font-family-heading: 'Quicksand', sans-serif;
+  --font-family-body: 'Nunito', sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-cw-butter);
+    color: var(--color-cw-neutral-900);
+    font-family: var(--font-family-body);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(91,181,181,0.4); }
+  50%       { box-shadow: 0 0 0 10px rgba(91,181,181,0); }
+}
+.animate-pulseGlow { animation: pulseGlow 2s infinite; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes wave {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+.animate-wave { animation: wave 3s ease-in-out infinite; }
+
+@keyframes breathing {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.05); opacity: 0.8; }
+}
+.animate-breathing { animation: breathing 4s ease-in-out infinite; }

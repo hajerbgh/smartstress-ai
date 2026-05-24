@@ -1,0 +1,25 @@
+# Secrets — NE JAMAIS committer
+.env
+
+# Claude Code (mémoires privées)
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# Base de données locale (SQLite conservé pour référence)
+*.db
+
+# Node
+node_modules/
+dist/
+.expo/
+
+# Build
+*.log
+.DS_Store

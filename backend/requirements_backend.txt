@@ -1,0 +1,13 @@
+fastapi>=0.115.0
+uvicorn==0.30.6
+sqlalchemy==2.0.35
+pydantic==2.9.2
+pydantic[email]
+numpy
+pandas
+scikit-learn
+python-jose[cryptography]==3.3.0
+bcrypt
+pymysql
+cryptography
+python-dotenv

@@ -1,0 +1,27 @@
+{
+  "model_type": "Random Forest",
+  "n_features": 14,
+  "feature_names": [
+    "gsr_mean",
+    "gsr_std",
+    "gsr_max",
+    "gsr_min",
+    "gsr_range",
+    "gsr_slope",
+    "gsr_n_peaks",
+    "hr_mean",
+    "hr_std",
+    "hr_max",
+    "hr_min",
+    "hr_range",
+    "hr_rmssd",
+    "gsr_hr_ratio"
+  ],
+  "classes": {
+    "0": "Calme",
+    "1": "Modéré",
+    "2": "Élevé"
+  },
+  "version": "1.0.0",
+  "notes": "Ce modèle est optimisé pour déploiement embarqué. Pour l'ESP32, convertir en TFLite via un réseau de neurones équivalent. Le scaler.pkl doit être appliqué avant toute inférence."
+}
