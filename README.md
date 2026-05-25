@@ -159,7 +159,8 @@ ChillWaves solves this by continuously measuring **galvanic skin response (GSR)*
 ![Reports](docs/screenshots/reports.png)
 
 ---
-
+## 🚀 DEMO 
+https://drive.google.com/file/d/1haCcSuoCrBnjyXt1TfGmwuGGq61-3QEH/view?t=0.592
 ## 🚀 Getting Started
 
 ### Prerequisites
