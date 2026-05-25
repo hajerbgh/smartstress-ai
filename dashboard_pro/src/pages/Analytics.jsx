@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend } from 'recharts';
 import { Loader2 } from 'lucide-react';
 
-const API = 'http://localhost:8000';
+const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 const STRESS_COLOR = (s) => s > 1.2 ? '#F28C7E' : s > 0.5 ? '#F5C6A5' : '#5BB5B5';
 
 export default function Analytics() {
