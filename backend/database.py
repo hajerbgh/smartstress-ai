@@ -17,13 +17,17 @@ DB_PORT = os.getenv("DB_PORT", "3306")
 DB_NAME = os.getenv("DB_NAME", "smartstress")
 DB_USER = os.getenv("DB_USER", "smartstress_user")
 DB_PASS = os.getenv("DB_PASS", "smartstress_pass")
+DB_SSL  = os.getenv("DB_SSL", "false").lower() == "true"
 
 DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}?charset=utf8mb4"
 
+_connect_args = {"ssl": {"ssl": True}} if DB_SSL else {}
+
 engine = create_engine(
     DATABASE_URL,
-    pool_pre_ping=True,    # détecte les connexions coupées
-    pool_recycle=3600,     # recycle les connexions après 1h (évite MySQL timeout)
+    connect_args=_connect_args,
+    pool_pre_ping=True,
+    pool_recycle=3600,
     pool_size=10,
     max_overflow=20,
 )
@@ -39,10 +43,10 @@ class User(Base):
     __tablename__ = "users"
 
     id            = Column(Integer, primary_key=True, index=True)
-    email         = Column(String, unique=True, index=True, nullable=False)
-    name          = Column(String, nullable=False)
-    goal          = Column(String, nullable=True)
-    password_hash = Column(String, nullable=False)
+    email         = Column(String(255), unique=True, index=True, nullable=False)
+    name          = Column(String(255), nullable=False)
+    goal          = Column(String(500), nullable=True)
+    password_hash = Column(String(255), nullable=False)
     created_at    = Column(DateTime, default=datetime.utcnow)
 
     readings = relationship("StressReading", back_populates="user", lazy="select")
@@ -57,9 +61,9 @@ class StressReading(Base):
     gsr           = Column(Float, nullable=False)
     heart_rate    = Column(Float, nullable=False)
     stress_label  = Column(Integer, nullable=False)
-    stress_name   = Column(String, nullable=False)
+    stress_name   = Column(String(50), nullable=False)
     confidence    = Column(Float, nullable=True)
-    source        = Column(String, default="simulator")
+    source        = Column(String(50), default="simulator")
     user_id       = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
 
     user = relationship("User", back_populates="readings")
@@ -70,7 +74,7 @@ class DailyStats(Base):
     __tablename__ = "daily_stats"
 
     id               = Column(Integer, primary_key=True, index=True)
-    date             = Column(String, unique=True, index=True)
+    date             = Column(String(20), unique=True, index=True)
     avg_gsr          = Column(Float)
     avg_hr           = Column(Float)
     avg_stress       = Column(Float)

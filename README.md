@@ -1,3 +1,13 @@
+---
+title: SmartStress API
+emoji: 🌊
+colorFrom: teal
+colorTo: blue
+sdk: docker
+app_port: 8000
+pinned: false
+---
+
 <div align="center">
 
 # 🌊 ChillWaves — SmartStress AI
