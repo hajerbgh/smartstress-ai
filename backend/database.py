@@ -69,6 +69,15 @@ class StressReading(Base):
     user = relationship("User", back_populates="readings")
 
 
+class DailyActivity(Base):
+    """Activité physique quotidienne (pas depuis l'app mobile)."""
+    __tablename__ = "daily_activity"
+
+    id    = Column(Integer, primary_key=True, index=True)
+    date  = Column(String(20), unique=True, index=True)
+    steps = Column(Integer, default=0)
+
+
 class DailyStats(Base):
     """Statistiques agrégées par jour."""
     __tablename__ = "daily_stats"

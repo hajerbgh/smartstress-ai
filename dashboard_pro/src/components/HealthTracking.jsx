@@ -1,45 +1,52 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Footprints, Moon, Flame, Sun } from 'lucide-react';
 
-function generateDaySteps() {
-  const hours = new Date().getHours();
-  const baseSteps = Math.floor(Math.random() * 3000) + 2000;
-  return Math.min(baseSteps + hours * 350, 12000);
-}
-
-function generateSleepData() {
-  const wakeMin = Math.floor(Math.random() * 30);
-  return {
-    total:   (Math.random() * 2 + 6).toFixed(1),
-    deep:    (Math.random() * 1.5 + 1).toFixed(1),
-    rem:     (Math.random() * 1 + 0.5).toFixed(1),
-    light:   (Math.random() * 2 + 2).toFixed(1),
-    quality: Math.floor(Math.random() * 30) + 70,
-    wake:    `07h${wakeMin.toString().padStart(2, '0')}`,
-  };
-}
+const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export default function HealthTracking() {
-  const [steps, setSteps]       = useState(generateDaySteps());
-  const [sleep, setSleep]       = useState(generateSleepData());
-  const [calories, setCalories] = useState(Math.floor(Math.random() * 500) + 1200);
+  const [steps, setSteps]       = useState(0);
+  const [sleep, setSleep]       = useState({ total: '--', deep: '--', rem: '--', light: '--', quality: '--', wake: '--' });
+  const [calories, setCalories] = useState(0);
   const [activeTab, setActiveTab] = useState('steps');
 
   const GOAL_STEPS = 10000;
   const stepsPct = Math.min((steps / GOAL_STEPS) * 100, 100);
 
-  // Hauteurs des barres horaires figées à la création du composant
   const barHeights = useMemo(() => Array.from({ length: 12 }, (_, i) => {
-    const h = i * 2;
     const current = new Date().getHours();
-    return h <= current ? Math.random() * 40 + 20 : 8;
+    return i * 2 <= current ? Math.random() * 40 + 20 : 8;
   }), []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setSteps(prev => Math.min(prev + Math.floor(Math.random() * 3), 12000));
-      setCalories(prev => Math.min(prev + Math.floor(Math.random() * 2), 2500));
-    }, 8000);
+    const fetchWellness = async () => {
+      try {
+        const [stepsRes, sleepRes] = await Promise.all([
+          fetch(`${API}/steps/today`),
+          fetch(`${API}/sleep/estimate`),
+        ]);
+        if (stepsRes.ok) {
+          const d = await stepsRes.json();
+          setSteps(d.steps || 0);
+          setCalories(Math.round((d.steps || 0) * 0.04));
+        }
+        if (sleepRes.ok) {
+          const d = await sleepRes.json();
+          if (d.data_available && d.sleep_hours > 0) {
+            const total = d.sleep_hours;
+            setSleep({
+              total:   total.toFixed(1),
+              deep:    (total * 0.2).toFixed(1),
+              rem:     (total * 0.15).toFixed(1),
+              light:   (total * 0.55).toFixed(1),
+              quality: Math.min(Math.round((total / 8) * 100), 100),
+              wake:    new Date().toLocaleTimeString('fr', { hour: '2-digit', minute: '2-digit' }),
+            });
+          }
+        }
+      } catch {}
+    };
+    fetchWellness();
+    const timer = setInterval(fetchWellness, 30000);
     return () => clearInterval(timer);
   }, []);
 

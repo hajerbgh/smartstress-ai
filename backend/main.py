@@ -24,9 +24,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func
 from datetime import datetime, timedelta
 from typing import List, Optional
-import random
+import random, threading, time
 
-from backend.database import init_db, get_db, StressReading, DailyStats, User
+from backend.database import init_db, get_db, StressReading, DailyStats, User, DailyActivity
 from backend.schemas import (
     SensorDataInput, StressReadingOut, PredictionResult,
     DailyStatsOut, WeeklySummary, HealthStatus,
@@ -50,10 +50,29 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+def _background_simulator():
+    """Génère une mesure toutes les 30 secondes en continu."""
+    from backend.database import SessionLocal
+    time.sleep(15)  # attendre que la DB soit prête
+    while True:
+        try:
+            db = SessionLocal()
+            gsr = round(random.uniform(1.0, 15.0), 3)
+            hr  = round(random.uniform(55.0, 115.0), 1)
+            label, name = (0, "calme") if gsr < 4 and hr < 70 else (2, "élevé") if gsr > 10 or hr > 100 else (1, "modéré")
+            db.add(StressReading(gsr=gsr, heart_rate=hr, stress_label=label, stress_name=name,
+                                 confidence=round(random.uniform(0.6, 0.95), 4), source="simulator"))
+            db.commit()
+            db.close()
+        except Exception:
+            pass
+        time.sleep(30)
+
 @app.on_event("startup")
 def startup():
     init_db()
-    print("[START] SmartStress AI Backend v2.0 — http://localhost:8000/docs")
+    threading.Thread(target=_background_simulator, daemon=True).start()
+    print("[START] SmartStress AI Backend v2.0 — simulateur actif")
 
 
 # ─── Général ────────────────────────────────────────────────────────────────
@@ -340,6 +359,26 @@ def estimate_sleep(
         n_readings_analyzed = len(readings),
         data_available      = True,
     )
+
+
+# ─── Pas quotidiens (depuis app mobile) ─────────────────────────────────────
+
+@app.post("/steps", tags=["Santé"])
+def save_steps(steps: int = Query(..., ge=0, le=100000), db: Session = Depends(get_db)):
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    activity = db.query(DailyActivity).filter(DailyActivity.date == today).first()
+    if activity:
+        activity.steps = steps
+    else:
+        db.add(DailyActivity(date=today, steps=steps))
+    db.commit()
+    return {"ok": True, "date": today, "steps": steps}
+
+@app.get("/steps/today", tags=["Santé"])
+def get_steps_today(db: Session = Depends(get_db)):
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    activity = db.query(DailyActivity).filter(DailyActivity.date == today).first()
+    return {"steps": activity.steps if activity else 0, "date": today}
 
 
 # ─── Simulateur ─────────────────────────────────────────────────────────────
