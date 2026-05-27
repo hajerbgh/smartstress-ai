@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Lightbulb, Loader2, ArrowRight, Sparkles } from 'lucide-react';
 import Logo from '../components/Logo';
 
+const API = 'https://hajerbgh-smartstress-api.hf.space';
+
 export default function Login({ onLogin }) {
   const [mode, setMode]       = useState('login');
   const [form, setForm]       = useState({ name: '', email: '', password: '', goal: 'Réduire mon stress quotidien' });
@@ -30,7 +32,7 @@ export default function Login({ onLogin }) {
         if (form.password.length < 6) {
           setError('Le mot de passe doit faire au moins 6 caractères.'); setLoading(false); return;
         }
-        const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://hajerbgh-smartstress-api.hf.space'}/auth/register`, {
+        const res = await fetch(`${API}/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: form.name, email: form.email, password: form.password, goal: form.goal }),
@@ -46,7 +48,7 @@ export default function Login({ onLogin }) {
         if (!form.email || !form.password) {
           setError('Email et mot de passe requis.'); setLoading(false); return;
         }
-        const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://hajerbgh-smartstress-api.hf.space'}/auth/login`, {
+        const res = await fetch(`${API}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: form.email, password: form.password }),
