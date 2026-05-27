@@ -9,7 +9,7 @@ import StressBadge from '../components/StressBadge';
 import { Activity, Heart, Brain, AlertTriangle, X, Target, Zap, Hand } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API = import.meta.env.VITE_API_URL || 'https://hajerbgh-smartstress-api.hf.space';
 const STRESS_COLOR = { 0: '#5BB5B5', 1: '#F5C6A5', 2: '#F28C7E' };
 
 export default function Dashboard({ user, onStressUpdate }) {

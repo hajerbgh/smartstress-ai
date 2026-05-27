@@ -112,17 +112,23 @@ void loop() {
 }
 
 // ─── Simulation valeurs GSR + HR ───────────────────────────────────────────
+// Cycle de 8 minutes : Calme → Modéré → Élevé → Calme
+// Transitions fluides pour un rendu réaliste
 void simulateValues() {
-  // HR entre 58 et 110 bpm, dérive lente
-  float drift = random(-30, 30) / 10.0;
-  heartRate = constrain(heartRate + drift, 58.0, 110.0);
+  int sec = (millis() / 1000) % 480;   // position dans le cycle de 8 min
 
-  // GSR corrélé au HR
-  float baseGSR;
-  if (heartRate > 95)      baseGSR = 10.0 + random(-20, 20) / 10.0;
-  else if (heartRate > 78) baseGSR = 6.5  + random(-15, 15) / 10.0;
-  else                     baseGSR = 3.0  + random(-10, 10) / 10.0;
-  gsrValue = constrain(baseGSR, 0.5, 25.0);
+  float tHR, tGSR;
+  if      (sec < 180) { tHR = 63.0;  tGSR = 2.0;  }  // 0-3 min : Calme
+  else if (sec < 300) { tHR = 85.0;  tGSR = 6.5;  }  // 3-5 min : Modéré
+  else if (sec < 360) { tHR = 105.0; tGSR = 12.0; }  // 5-6 min : Élevé
+  else                { tHR = 65.0;  tGSR = 2.5;  }  // 6-8 min : retour Calme
+
+  // Dérive progressive vers la cible (transition fluide)
+  heartRate += (tHR - heartRate) * 0.15 + random(-10, 10) / 20.0;
+  heartRate  = constrain(heartRate, 55.0, 115.0);
+
+  gsrValue = tGSR + random(-15, 15) / 10.0;
+  gsrValue = constrain(gsrValue, 0.5, 25.0);
 }
 
 // ─── OLED : initialisation ─────────────────────────────────────────────────
@@ -330,7 +336,7 @@ void fetchWellnessData() {
     client.setInsecure();
     HTTPClient http;
     http.begin(client, SLEEP_URL);
-    http.setTimeout(6000);
+    http.setTimeout(10000);
     if (http.GET() == 200) {
       StaticJsonDocument<300> doc;
       if (!deserializeJson(doc, http.getString())) {
@@ -349,7 +355,7 @@ void fetchWellnessData() {
     client.setInsecure();
     HTTPClient http;
     http.begin(client, STEPS_URL);
-    http.setTimeout(6000);
+    http.setTimeout(10000);
     if (http.GET() == 200) {
       StaticJsonDocument<100> doc;
       if (!deserializeJson(doc, http.getString())) {

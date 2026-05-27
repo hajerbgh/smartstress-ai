@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Send, Sparkles, Target, XCircle, Waves } from 'lucide-react';
 import Logo from '../components/Logo';
 
-const API      = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API      = import.meta.env.VITE_API_URL || 'https://hajerbgh-smartstress-api.hf.space';
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 // Clé Groq : à définir dans .env (VITE_GROQ_KEY=gsk_...) — ne jamais committer en clair
 const GROQ_KEY = import.meta.env.VITE_GROQ_KEY || '';
@@ -218,3 +218,4 @@ Réponse en français, format Markdown léger:`;
     </div>
   );
 }
+
