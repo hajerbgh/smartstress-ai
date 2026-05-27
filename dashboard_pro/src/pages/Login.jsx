@@ -20,6 +20,14 @@ export default function Login({ onLogin }) {
     'Suivi médical',
   ];
 
+  const handleDemo = () => {
+    const demoUser = { id: 1, name: 'hajer BenGhazi', email: 'hajerbgh2003@gmail.com', goal: 'Améliorer ma concentration', joinedAt: new Date().toISOString() };
+    localStorage.setItem('ss_user', JSON.stringify(demoUser));
+    localStorage.setItem('ss_token', 'demo-token');
+    onLogin(demoUser);
+    navigate('/dashboard');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -173,13 +181,17 @@ export default function Login({ onLogin }) {
               </div>
             )}
 
-            <div className="flex justify-center mt-3">
+            <div className="flex flex-col items-center gap-3 mt-3">
               <button type="submit" disabled={loading}
                 className={`bg-cw-coral hover:bg-orange-400 text-white font-bold py-3.5 px-12 rounded-xl transition-all shadow-[0_4px_16px_rgba(242,140,126,0.3)] hover:shadow-[0_8px_24px_rgba(242,140,126,0.4)] hover:-translate-y-0.5 flex items-center gap-2 ${loading ? 'opacity-70 pointer-events-none' : ''}`}>
                 {loading
                   ? <><Loader2 size={18} className="animate-spin" /> Chargement...</>
                   : <>{mode === 'login' ? 'Se connecter' : 'Créer mon compte'}<ArrowRight size={18} strokeWidth={2.8} /></>
                 }
+              </button>
+              <button type="button" onClick={handleDemo}
+                className="text-xs font-bold text-cw-teal hover:text-cw-mint underline underline-offset-2 transition-colors">
+                Accès démo rapide (sans connexion)
               </button>
             </div>
           </form>
