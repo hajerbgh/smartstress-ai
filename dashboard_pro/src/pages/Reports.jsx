@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Download, FileText, CheckCircle, Calendar, Loader2 } from 'lucide-react';
 import Logo from '../components/Logo';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API = import.meta.env.VITE_API_URL || 'https://hajerbgh-smartstress-api.hf.space';
 const STRESS_COLOR = (s) => s > 1.2 ? '#F28C7E' : s > 0.5 ? '#F5C6A5' : '#5BB5B5';
 
 export default function Reports({ user }) {
@@ -280,3 +280,4 @@ export default function Reports({ user }) {
     </div>
   );
 }
+

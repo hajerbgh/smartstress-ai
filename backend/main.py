@@ -71,8 +71,9 @@ def _background_simulator():
 @app.on_event("startup")
 def startup():
     init_db()
-    threading.Thread(target=_background_simulator, daemon=True).start()
-    print("[START] SmartStress AI Backend v2.0 — simulateur actif")
+    # Simulateur désactivé — l'ESP32 envoie les vraies données
+    # threading.Thread(target=_background_simulator, daemon=True).start()
+    print("[START] SmartStress AI Backend v2.0 — mode ESP32")
 
 
 # ─── Général ────────────────────────────────────────────────────────────────

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Footprints, Moon, Flame, Sun } from 'lucide-react';
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API = import.meta.env.VITE_API_URL || 'https://hajerbgh-smartstress-api.hf.space';
 
 export default function HealthTracking() {
   const [steps, setSteps]       = useState(0);
@@ -201,3 +201,4 @@ export default function HealthTracking() {
     </div>
   );
 }
+
