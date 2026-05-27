@@ -30,7 +30,7 @@ export default function Login({ onLogin }) {
         if (form.password.length < 6) {
           setError('Le mot de passe doit faire au moins 6 caractères.'); setLoading(false); return;
         }
-        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/auth/register`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://hajerbgh-smartstress-api.hf.space'}/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name: form.name, email: form.email, password: form.password, goal: form.goal }),
@@ -46,7 +46,7 @@ export default function Login({ onLogin }) {
         if (!form.email || !form.password) {
           setError('Email et mot de passe requis.'); setLoading(false); return;
         }
-        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/auth/login`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'https://hajerbgh-smartstress-api.hf.space'}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: form.email, password: form.password }),
