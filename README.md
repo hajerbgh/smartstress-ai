@@ -57,7 +57,7 @@ Existing stress management solutions suffer from two major limitations:
 - **Subjectivity** — self-reported questionnaires rely on user perception
 - **Reactivity** — medical consultations happen *after* the problem, not during
 
-ChillWaves solves this by continuously measuring **galvanic skin response (GSR)** and **heart rate (HR)** via an ESP32 IoT device, classifying stress levels in real time using a **Random Forest** model (98% accuracy), and delivering actionable recommendations through **ChillBot**, an AI therapeutic assistant powered by LLaMA-3.3-70b.
+ChillWaves solves this by continuously measuring **galvanic skin response (GSR)** and **heart rate (HR)** via an ESP32 IoT device, classifying stress levels in real time using a **Random Forest** model , and delivering actionable recommendations through **ChillBot**, an AI therapeutic assistant powered by LLaMA-3.3-70b.
 
 ---
 
@@ -312,7 +312,7 @@ Combined       : gsr_hr_ratio
 | `1` | 😐 Moderate | 4–8 µS | 70–90 bpm |
 | `2` | 😰 High Stress | > 8 µS | > 90 bpm |
 
-**Performance:** 98% accuracy on simulated test dataset.
+
 
 ---
 
@@ -397,7 +397,7 @@ smartstress-ai/
 ## 🗺 Roadmap
 
 - [x] FastAPI backend with JWT auth
-- [x] Random Forest ML model (98% accuracy)
+- [x] Random Forest ML model 
 - [x] React web dashboard with live ECG
 - [x] ChillBot AI chatbot (LLaMA-3.3-70b)
 - [x] React Native mobile app
